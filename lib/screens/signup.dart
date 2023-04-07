@@ -11,6 +11,7 @@ class SignUp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF191720),
       body: Padding(
         padding:
@@ -51,15 +52,16 @@ class SignUp extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 11),
-            Button(label: "Sign Up", onPress: () => onSignPress(context)),
+            Button(
+              label: "Sign Up",
+              onPress: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (_) => const JobListing()));
+              },
+            ),
           ],
         ),
       ),
     );
-  }
-
-  void onSignPress(BuildContext context) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => const JobListing()));
   }
 }
