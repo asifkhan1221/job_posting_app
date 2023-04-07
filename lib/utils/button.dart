@@ -15,6 +15,8 @@ class Button extends StatelessWidget {
       children: [
         Expanded(
           child: Container(
+            width: 360,
+            height: 71,
             padding: const EdgeInsets.only(top: 15, bottom: 15),
             alignment: Alignment.center,
             decoration: BoxDecoration(

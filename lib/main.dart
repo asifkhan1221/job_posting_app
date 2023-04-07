@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:job_posting_app/Sign_in.dart';
+import 'package:job_posting_app/screens/sign_in.dart';
 
 void main() {
   runApp(

@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
-class AppTextField extends StatelessWidget {
-  final String? placeholder;
-
-  const AppTextField({super.key, required this.placeholder});
+class SearchBox extends StatelessWidget {
+  const SearchBox({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 360,
-      height: 71,
+      height: 56,
       margin: const EdgeInsets.only(top: 20),
       padding: const EdgeInsets.all(15),
       decoration: BoxDecoration(
@@ -22,15 +20,15 @@ class AppTextField extends StatelessWidget {
 
           //
           ),
-      child: TextField(
-        style: const TextStyle(color: Colors.white),
+      child: const TextField(
         decoration: InputDecoration(
-          fillColor: Colors.white,
+          contentPadding: EdgeInsets.all(9),
           border: InputBorder.none,
-          hintText: placeholder,
-          hintStyle: const TextStyle(
+          prefixIcon: Icon(Icons.search, color: Colors.grey),
+          hintText: 'Search keyword',
+          hintStyle: TextStyle(
             fontSize: 15,
-            color: Color(0xff8F8F9E),
+            color: Color(0xFF8F8F9E),
           ),
         ),
       ),

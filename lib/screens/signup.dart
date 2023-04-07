@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-import '../Sign_in.dart';
+import 'package:job_posting_app/screens/job_listing.dart';
+import 'package:job_posting_app/screens/sign_in.dart';
 
 import '../utils/button.dart';
 import '../utils/textfield.dart';
@@ -51,12 +51,15 @@ class SignUp extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 11),
-            Button(label: "Sign Up", onPress: onSignPress),
+            Button(label: "Sign Up", onPress: () => onSignPress(context)),
           ],
         ),
       ),
     );
   }
 
-  void onSignPress() {}
+  void onSignPress(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => const JobListing()));
+  }
 }
