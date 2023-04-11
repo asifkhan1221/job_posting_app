@@ -6,7 +6,9 @@ import '../utils/button.dart';
 import '../utils/textfield.dart';
 
 class SignIn extends StatelessWidget {
-  const SignIn({super.key});
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  SignIn({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,15 +32,19 @@ class SignIn extends StatelessWidget {
             const Text("Welcome\nJoin the community!",
                 style: TextStyle(color: Colors.white, fontSize: 30)),
             const SizedBox(height: 47),
-            const AppTextField(
+            AppTextField(
               placeholder: "Enter your email address",
+              titleTextController: emailController,
             ),
-            const AppTextField(placeholder: "Enter your password"),
+            AppTextField(
+              placeholder: "Enter your password",
+              titleTextController: passwordController,
+            ),
             const Spacer(),
             GestureDetector(
               onTap: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const SignUp()));
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => SignUp()));
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

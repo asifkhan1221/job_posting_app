@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:job_posting_app/screens/job_listing.dart';
+import 'package:job_posting_app/model/job_post.dart';
 import 'package:job_posting_app/utils/button.dart';
 import 'package:job_posting_app/utils/description_textfield.dart';
 import 'package:job_posting_app/utils/textfield.dart';
 
 class AddNewJob extends StatelessWidget {
-  const AddNewJob({super.key});
+  TextEditingController titleTextController = TextEditingController();
+  TextEditingController descriptionTextController = TextEditingController();
+  AddNewJob({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,14 +19,13 @@ class AddNewJob extends StatelessWidget {
           left: 27,
           right: 27,
         ),
-        child: Column(
+        child: ListView(
           children: [
             Row(
               children: [
                 GestureDetector(
                   onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (_) => const JobListing()));
+                    Navigator.pop(context);
                   },
                   child: const Icon(
                     Icons.arrow_back_ios_new_outlined,
@@ -33,42 +34,42 @@ class AddNewJob extends StatelessWidget {
                 ),
                 const Padding(padding: EdgeInsets.only(left: 31)),
                 const Text(
-                  'Add New Job',
+                  'Add Job',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 25,
                       fontWeight: FontWeight.w600),
-                )
+                ),
               ],
             ),
             const SizedBox(
-              height: 10,
+              height: 11,
             ),
-            const AppTextField(
-              placeholder: 'Enter position name',
+            AppTextField(
+              placeholder: 'Flutter Developer',
+              titleTextController: titleTextController,
             ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const DescriptionTextField(
-                      placeholder: 'Describe Requirement...',
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Button(
-                      label: 'Submit Job',
-                      onPress: () {},
-                    ),
-                  ],
-                ),
-              ),
+            DescriptionTextField(
+              placeholder: "Description requirement.......",
+              color: Colors.white,
+              descriptionController: descriptionTextController,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Button(
+              label: 'Add Job',
+              onPress: () => onSave(context),
             ),
           ],
         ),
       ),
     );
+  }
+
+  void onSave(BuildContext context) {
+    var data =
+        JobPost(titleTextController.text, descriptionTextController.text);
+    Navigator.pop(context, data);
   }
 }

@@ -1,10 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:job_posting_app/model/job_post.dart';
 import 'package:job_posting_app/screens/add_job.dart';
-import 'package:job_posting_app/utils/custom_list_tile.dart';
+import 'package:job_posting_app/screens/edit_job.dart';
 import 'package:job_posting_app/utils/search_box.dart';
 
-class JobListing extends StatelessWidget {
+class JobListing extends StatefulWidget {
   const JobListing({super.key});
+
+  @override
+  State<JobListing> createState() => _JobListingState();
+}
+
+class _JobListingState extends State<JobListing> {
+  TextEditingController searchController = TextEditingController();
+  List<JobPost> itemsOnSearch = [];
+  List<JobPost> items = [];
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +26,14 @@ class JobListing extends StatelessWidget {
           backgroundColor: Colors.white,
           onPressed: () {
             Navigator.of(context)
-                .push(MaterialPageRoute(builder: (_) => const AddNewJob()));
+                .push<JobPost>(MaterialPageRoute(builder: (_) => AddNewJob()))
+                .then((value) => setState(() {
+                      if (value!.jobTitle.isNotEmpty &&
+                          value.jobDescription.isNotEmpty) {
+                        items
+                            .add(JobPost(value.jobTitle, value.jobDescription));
+                      }
+                    }));
           },
           child: const Icon(
             Icons.add,
@@ -40,60 +57,137 @@ class JobListing extends StatelessWidget {
                   fontWeight: FontWeight.bold),
             ),
             Row(
-              children: const [
-                Text(
+              children: [
+                const Text(
                   'Muhammad Asif',
                   style: TextStyle(
                       fontSize: 25,
                       color: Color(0xFFFFFFFF),
                       decoration: TextDecoration.none),
                 ),
-                Spacer(),
-                Icon(
-                  Icons.logout,
-                  color: Colors.white,
+                const Spacer(),
+                IconButton(
+                  onPressed: () {},
+                  icon: Image.asset("images/logout.png"),
                 ),
               ],
             ),
-            const SearchBox(),
+            SearchBox(),
             const SizedBox(
-              height: 26,
+              height: 15,
             ),
             Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: const [
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                    CustomListTile(),
-                  ],
-                ),
-              ),
+              child: items.isNotEmpty
+                  ? ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      padding: const EdgeInsets.only(top: 11, bottom: 17),
+                      itemCount: updateAccordingToSearch(
+                          items.length, itemsOnSearch.length),
+                      itemBuilder: item,
+                    )
+                  : const Center(
+                      child: Text(
+                        "No job posted yet!",
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: Color(0xFF8F8F9E),
+                            fontFamily: "Poppins",
+                            fontWeight: FontWeight.w300),
+                      ),
+                    ),
             ),
-            // FloatingActionButton(
-            //   onPressed: () {},
-            //   child: const Icon(Icons.add),
-            // )
           ],
         ),
       ),
     );
+  }
+
+  Widget item(BuildContext context, int index) => Padding(
+        padding: const EdgeInsets.only(top: 11),
+        child: Container(
+          //padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+              color: const Color(0xFF201E27),
+              borderRadius: BorderRadius.circular(15)),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 10, left: 25),
+            child: ListTile(
+              title: Text(
+                searchController.text.isNotEmpty
+                    ? itemsOnSearch[index].jobTitle
+                    : items[index].jobTitle,
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Poppins',
+                  color: Colors.white,
+                ),
+              ),
+              subtitle: Text(
+                searchController.text.isNotEmpty
+                    ? itemsOnSearch[index].jobDescription
+                    : items[index].jobDescription,
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Color(0xFF8F8F9E),
+                  fontWeight: FontWeight.w300,
+                  fontFamily: 'Poppins',
+                ),
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context)
+                          .push<JobPost>(MaterialPageRoute(
+                              builder: (_) => EditJob(
+                                    posname: items[index].jobTitle,
+                                    requirement: items[index].jobDescription,
+                                  )))
+                          .then((value) => setState(() {
+                                if (value?.jobTitle != "" &&
+                                    value?.jobDescription != "") {
+                                  items[index].jobTitle = value!.jobTitle;
+                                  items[index].jobDescription =
+                                      value.jobDescription;
+                                }
+                              }));
+                    },
+                    icon: Image.asset("images/edit.png"),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      setState(() {
+                        items.removeAt(index);
+                      });
+                    },
+                    icon: Image.asset("images/delete.png"),
+                  )
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
+
+  void onSearch(String search) {
+    setState(() {
+      itemsOnSearch = items
+          .where((element) =>
+              element.jobTitle.toLowerCase().contains(search) ||
+              element.jobDescription.toLowerCase().contains(search))
+          .toList();
+    });
+  }
+
+  updateAccordingToSearch(int item, int searchItem) {
+    int value;
+    if (searchController.text.isNotEmpty) {
+      value = searchItem;
+    } else {
+      value = item;
+    }
+    return value;
   }
 }
